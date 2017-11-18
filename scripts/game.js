@@ -30,8 +30,8 @@ Game.prototype.update = function() {
 Game.prototype.setBallVelocity = function(player){
   var x = -(this.bodies[2].velocity.x);
   var y = (this.bodies[2].velocity.y + player.velocity.y) / 2;
-  this.bodies[2].velocity = {x: x, y: y }
-}
+  this.bodies[2].velocity = {x: x, y: y };
+};
 
 Game.prototype.draw = function(screen, gameSize) {
   screen.clearRect(0, 0, gameSize.x, gameSize.y)
@@ -82,20 +82,20 @@ Player2.prototype.update = function(keys) {
 function Ball(game, gameSize) {
   this.game = game;
   this.center= {x: gameSize.x / 2 - 5, y: gameSize.y / 2 - 5}
-  this.size = {x: 10, y: 10}
-  this.velocity = {x: 10, y: 0}
-}
+  this.size = {x: 10, y: 10};
+  this.velocity = {x: 10, y: 0};
+};
 
 Ball.prototype.update = function() {
   this.center = {x: this.center.x + this.velocity.x, y: this.center.y + this.velocity.y}
   if (this.center.y <= 0 || this.center.y >= 310) {
     this.velocity.y = -this.velocity.y;
-  }
-}
+  };
+};
 
 function drawRect(screen, body) {
   screen.fillRect(body.center.x, body.center.y, body.size.x, body.size.y);
-}
+};
 
 function Keyboarder(keys) {
   var keyState = {};

@@ -5,6 +5,7 @@ function Game(screenId) {
   var frameLength = 80;
 
   this.bodies = [new Player1(this, gameSize), new Player2(this,gameSize), new Ball(this, gameSize)]
+  this.keyboarder = new Keyboarder();
 
   var self = this;
   this.tick = setInterval(function(){
@@ -22,7 +23,7 @@ Game.prototype.update = function() {
   };
 
   for (var i=0; i < this.bodies.length; i++) {
-    this.bodies[i].update();
+    this.bodies[i].update(this.keyboarder);
   };
 };
 
@@ -45,14 +46,13 @@ function Player1(game, gameSize) {
   this.center = {x: 10, y: gameSize.y / 2 - 20};
   this.size = {x: 5, y: 40};
   this.velocity = {x:0, y:0}
-  this.keyboarder = new Keyboarder();
 };
 
 Player1.prototype.update = function(keys) {
-  if (this.keyboarder.isDown(this.keyboarder.KEYS.P1UP) && this.center.y > 0) {
+  if (keys.isDown(keys.KEYS.P1UP) && this.center.y > 0) {
     this.center.y -= 10;
     this.velocity.y = -10;
-  } else if (this.keyboarder.isDown(this.keyboarder.KEYS.P1DOWN) && this.center.y < 320 - this.size.y) {
+  } else if (keys.isDown(keys.KEYS.P1DOWN) && this.center.y < 320 - this.size.y) {
     this.center.y += 10;
     this.velocity.y = 10;
   } else {
@@ -65,14 +65,13 @@ function Player2(game, gameSize) {
   this.center = {x: gameSize.x - 10, y: gameSize.y / 2 - 20}
   this.size = {x: 5, y: 40};
   this.velocity = {x:0, y:0}
-  this.keyboarder = new Keyboarder();
 };
 
-Player2.prototype.update = function() {
-  if (this.keyboarder.isDown(this.keyboarder.KEYS.P2UP) && this.center.y > 0) {
+Player2.prototype.update = function(keys) {
+  if (keys.isDown(keys.KEYS.P2UP) && this.center.y > 0) {
     this.center.y -= 10;
     this.velocity.y = -10;
-  } else if (this.keyboarder.isDown(this.keyboarder.KEYS.P2DOWN) && this.center.y < 320 - this.size.y) {
+  } else if (keys.isDown(keys.KEYS.P2DOWN) && this.center.y < 320 - this.size.y) {
     this.center.y += 10;
     this.velocity.y = 10;
   } else {
@@ -119,8 +118,6 @@ function colliding(b1, b2) {
             b1.center.x - b1.size.x / 2 >= b2.center.x + b2.size.x / 2 ||
             b1.center.y - b1.size.y / 2 >= b2.center.y + b2.size.y / 2 + 20);
 };
-
-
 
 window.onload = function() {
   new Game('screen');

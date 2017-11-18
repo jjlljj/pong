@@ -43,7 +43,7 @@ Game.prototype.draw = function(screen, gameSize) {
 
 function Player1(game, gameSize) {
   this.game = game;
-  this.center = {x: 10, y: gameSize.y / 2 - 20};
+  this.center = {x: 5, y: gameSize.y / 2 - 20};
   this.size = {x: 5, y: 40};
   this.velocity = {x:0, y:0}
 };
@@ -88,7 +88,7 @@ function Ball(game, gameSize) {
 
 Ball.prototype.update = function() {
   this.center = {x: this.center.x + this.velocity.x, y: this.center.y + this.velocity.y}
-  if (this.center.y <= 0 || this.center.y >= 320) {
+  if (this.center.y <= 0 || this.center.y >= 310) {
     this.velocity.y = -this.velocity.y;
   }
 }

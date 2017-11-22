@@ -2,7 +2,10 @@ function Game(screenId) {
   var canvas = document.getElementById(screenId);
   var screen = canvas.getContext('2d');
   var gameSize = {x: canvas.width, y: canvas.height};
-  var frameLength = 80;
+  var frameLength = 70;
+  this.gameSize = gameSize;
+  this.playerOneScore = 0;
+  this.playerTwoScore = 0;
 
   this.bodies = [new Player1(this, gameSize), new Player2(this,gameSize), new Ball(this, gameSize)]
   this.keyboarder = new Keyboarder();
@@ -21,6 +24,19 @@ Game.prototype.update = function() {
   if (colliding(this.bodies[2], this.bodies[1])) {
     this.setBallVelocity(this.bodies[1]);
   };
+
+  if (this.bodies[2].center.x > this.gameSize.x) {
+    this.playerOneScore ++
+    this.bodies.pop()
+    this.bodies.push(new Ball(this, this.gameSize))
+    updateScore('player-1', this.playerOneScore)
+  }
+  if (this.bodies[2].center.x < 0) {
+    this.playerTwoScore ++
+    this.bodies.pop()
+    this.bodies.push(new Ball(this, this.gameSize,  {x: -10, y: 0}, {x: this.gameSize.x / 2 + 100, y: this.gameSize.y / 2 - 5}))
+    updateScore('player-2', this.playerTwoScore);
+  }
 
   for (var i=0; i < this.bodies.length; i++) {
     this.bodies[i].update(this.keyboarder);
@@ -79,11 +95,11 @@ Player2.prototype.update = function(keys) {
   }
 }
 
-function Ball(game, gameSize) {
+function Ball(game, gameSize, velocity, center) {
   this.game = game;
-  this.center= {x: gameSize.x / 2 - 5, y: gameSize.y / 2 - 5}
+  this.center = center || {x: gameSize.x / 2 -100, y: gameSize.y / 2 - 5}
   this.size = {x: 10, y: 10};
-  this.velocity = {x: 10, y: 0};
+  this.velocity = velocity || {x: 10, y: 0};
 };
 
 Ball.prototype.update = function() {
@@ -113,11 +129,17 @@ function Keyboarder(keys) {
 
 function colliding(b1, b2) {
   return !(b1 === b2 || 
-            b1.center.x + b1.size.x / 2 <= b2.center.x - b2.size.x / 2 ||
+            b1.center.x + b1.size.x / 2 <= b2.center.x - b2.size.x / 2 - 5 ||
             b1.center.y + b1.size.y / 2 <= b2.center.y - b2.size.y / 2 + 15 ||
             b1.center.x - b1.size.x / 2 >= b2.center.x + b2.size.x / 2 ||
             b1.center.y - b1.size.y / 2 >= b2.center.y + b2.size.y / 2 + 20);
 };
+
+function updateScore(player, score) {
+  var playerScoreBoard = document.querySelector('.'+player+'-score')
+  playerScoreBoard.innerText = score;
+};
+
 
 window.onload = function() {
   new Game('screen');
